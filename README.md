@@ -2,15 +2,15 @@
 
 Express/EJS form handling, a browser `fetch()` JSON API, and a Gemini backend deployed to AWS Elastic Beanstalk.
 
-## Live deployments
+## Deployment record (currently offline)
 
-Last verified: **October 20, 2026**. These are the current demo URLs; cloud availability depends on the active services and AWS Learner Lab session.
+**Demo services were shut down on October 20, 2026 after the demonstration to avoid further charges.** The URLs below record the last working deployments and are no longer live. Source code, verification results, and redeployment instructions remain available.
 
-| Lab | Live demo | Deployed application source |
+| Lab | Last deployed URL (offline) | Application source |
 | --- | --- | --- |
-| **N3.1** - Traditional HTML forms | [Open Cloud Run app](https://cs651-n31-a6jstwmpja-uw.a.run.app/) | [Original starter at `2e88635`](https://github.com/sean10203040/cs651-n3-labs/tree/2e88635) |
-| **N3.2** - REST/JSON and `fetch()` | [Open Cloud Run app](https://cs651-n32-a6jstwmpja-uw.a.run.app/) | Root application at [`14686f9`](https://github.com/sean10203040/cs651-n3-labs/tree/14686f9) |
-| **N3.4** - Smart Speech Coach backend | [Open Beanstalk backend](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/) / [Health](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health) | [`n3.4/backend/`](n3.4/backend/) at `14686f9` |
+| **N3.1** - Traditional HTML forms | [Previous Cloud Run URL](https://cs651-n31-a6jstwmpja-uw.a.run.app/) | [Original starter at `2e88635`](https://github.com/sean10203040/cs651-n3-labs/tree/2e88635) |
+| **N3.2** - REST/JSON and `fetch()` | [Previous Cloud Run URL](https://cs651-n32-a6jstwmpja-uw.a.run.app/) | Root application at [`14686f9`](https://github.com/sean10203040/cs651-n3-labs/tree/14686f9) |
+| **N3.4** - Smart Speech Coach backend | [Previous Beanstalk URL](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/) / [Health](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health) | [`n3.4/backend/`](n3.4/backend/) at `14686f9` |
 
 **N3.3 is already graded and was left unchanged.** Its separate frontend/Cloud Run deployment is outside this deployment update; this repository contains the backend copy used for N3.4.
 
@@ -51,7 +51,7 @@ npm test
 
 For the separate AI backend, follow [N3.4 local setup](n3.4/README.md#run-the-backend-locally). A Gemini API key is required only for that backend.
 
-## Class demonstration
+## Class demonstration (after redeployment)
 
 1. **N3.1:** Open the original Cloud Run app, enter a name/email, and submit the customer form. The browser navigates to `/readCustomerInfoAndRespond` and receives HTML.
 2. **N3.2:** Open the REST app and submit the **Customer Form using REST / JSON**. JavaScript posts JSON to `/api/customer`; the greeting appears on the same page without navigation. The traditional forms still work.

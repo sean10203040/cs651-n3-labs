@@ -2,14 +2,16 @@
 
 [Back to the main README](../README.md)
 
+**Status: the demo environment was terminated on October 20, 2026 to avoid further charges.** Its instance, attached disk, Elastic IP, application, and source bundle were removed. The dedicated Gemini key was revoked. The URLs and configuration below are a historical deployment record; redeploy with a new key to run the demo again.
+
 This lab deploys the Smart Speech Coach Express/Gemini backend to Elastic Beanstalk. The backend source is in [`backend/server.js`](backend/server.js); [`backend/Procfile`](backend/Procfile) starts it with `web: npm start`.
 
-## Current deployment
+## Last deployment (terminated)
 
 | Setting | Value |
 | --- | --- |
-| Backend | [Open service](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/) |
-| Health endpoint | [GET /api/health](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health) |
+| Backend | [Previous service URL (offline)](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/) |
+| Health endpoint | [Previous health URL (offline)](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health) |
 | Application | `cs651-n3-4` |
 | Environment | `cs651-n34-lcho-env` (`e-zrhnsfxzdr`) |
 | Region | `us-east-1` |
@@ -49,7 +51,7 @@ askAnythingPrompt=You are going to answer questions about Smart Speech Coach. Ke
 allowedOrigins=http://localhost:5173,https://smartspeechcoach.web.app
 ```
 
-The deployed Gemini authorization key is restricted to `generativelanguage.googleapis.com` and bound to a dedicated service account. The key value is not included here.
+The former Gemini authorization key was restricted to `generativelanguage.googleapis.com` and bound to a dedicated service account. Both were removed during cleanup. Create a new restricted key for redeployment; never reuse or publish the revoked credential.
 
 Set the model explicitly: the source's fallback is `gemini-2.5-flash`, which the API rejected for this new account. On October 20, `gemini-3.8-flash` returned HTTP 503 (high demand), so the deployment uses the verified working `gemini-3.5-flash-lite`. This is an environment setting; the backend code is unchanged.
 
@@ -62,12 +64,14 @@ Set the model explicitly: the source's fallback is `gemini-2.5-flash`, which the
    zip /tmp/cs651-n34-backend.zip server.js package.json package-lock.json Procfile
    ```
 
-3. Upload that ZIP as a new application version under `cs651-n3-4`. Exclude `.env` and `node_modules`; Beanstalk installs the locked dependencies.
+3. Create the application `cs651-n3-4` again if needed, then upload that ZIP as a new application version. Exclude `.env` and `node_modules`; Beanstalk installs the locked dependencies.
 4. Create a **Standard web environment**, choose Node.js 22 / Amazon Linux 2023 and **single instance**, then use the existing service role **LabRole** and instance profile **LabInstanceProfile**.
 5. Set the environment properties above. Keep the API key hidden when demonstrating the console.
 6. Wait for status **Ready** and health **Ok**, then test both endpoints below. For code updates, upload a new version and deploy it to the existing environment.
 
 ## Verify the deployment
+
+Run these checks after redeploying. Use the new environment URL if the former hostname is unavailable.
 
 ```bash
 curl -i http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health

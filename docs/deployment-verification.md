@@ -2,6 +2,8 @@
 
 [Back to the main README](../README.md)
 
+**Historical verification:** these checks passed before the demo services were intentionally shut down later on October 20, 2026. The Cloud Run services and Beanstalk environment are now offline.
+
 ## Observed results
 
 | Check | Result |
@@ -39,3 +41,9 @@ The current repository update adds deployment documentation, a Docker build defi
 - Cloud Run can scale to zero; Beanstalk availability depends on the active Learner Lab environment. These deployments are not guaranteed to remain online indefinitely.
 
 The container build reported 12 dependency audit findings inherited from the starter lockfile (5 low, 1 moderate, 4 high, 2 critical). Dependency upgrades were outside this documentation and packaging update.
+
+## Post-demonstration cleanup
+
+On October 20, 2026 the Beanstalk environment, its EC2 instance/disk/IP, application, and source bundle were removed. Cloud Run services `cs651-n31`, `cs651-n32`, and the earlier private `n33-investigation` test were deleted. Both lab Artifact Registry repositories and the temporary Cloud Build source bucket were deleted. The dedicated N3.4 Gemini key was revoked and its service account removed. The separately maintained graded N3.3 application was not changed.
+
+Source code remains in this repository. The cloud guides describe how to rebuild and redeploy; a new Gemini credential is required.

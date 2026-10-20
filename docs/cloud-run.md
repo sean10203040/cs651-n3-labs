@@ -2,7 +2,9 @@
 
 [Back to the main README](../README.md)
 
-## Current services
+**Status: both demo services were deleted on October 20, 2026 after the demonstration.** The earlier private `n33-investigation` test service, stored container images, and temporary build-source bucket were also removed. The configuration below records the successful deployment; rebuild the images to bring the demos online again.
+
+## Last deployed services (removed)
 
 | Setting | Value |
 | --- | --- |
@@ -16,16 +18,19 @@
 | Runtime identity | Existing `n33-runtime@cs651-n33-lcho-20261014.iam.gserviceaccount.com`; no project roles added |
 | Access | Public demo services |
 
-The existing `n33-investigation` service belongs to earlier work and was not changed.
+The earlier `n33-investigation` private test was not part of the demo deployment. It was subsequently removed as part of the requested shutdown of all lab servers. The separately maintained, graded N3.3 application was not changed.
 
 ## Build and deploy manually
 
-Run these commands in an authenticated Google Cloud Shell with Docker and access to the project. The Artifact Registry repository `cs651-n3` already exists in `us-west1`.
+Run these commands in an authenticated Google Cloud Shell with Docker and access to the project. The previous Artifact Registry repository was deleted during cleanup. Recreate `cs651-n3` in `us-west1` before pushing images. The project and existing runtime identity remain available.
 
 ```bash
 git clone https://github.com/sean10203040/cs651-n3-labs.git
 cd cs651-n3-labs
 
+gcloud artifacts repositories create cs651-n3 \
+  --repository-format=docker --location=us-west1 \
+  --project=cs651-n33-lcho-20261014
 gcloud auth configure-docker us-west1-docker.pkg.dev --quiet
 ```
 
@@ -89,7 +94,7 @@ In the browser, submit the traditional form in N3.1 and the fetch form in N3.2. 
 
 - **Local:** press Ctrl+C in the terminal running `npm start`.
 - **Idle Cloud Run:** minimum instances is zero, so services can scale down automatically. The public URL remains available for future requests.
-- **Take a demo offline:** delete only the named service below. This removes its endpoint and service configuration; it does not delete the saved Artifact Registry image. Redeploy the image to restore the service.
+- **Take a demo offline:** delete only the named service below. This removes its endpoint and service configuration; it does not delete the saved Artifact Registry image. If the image is still retained, redeploy it to restore the service. The October 20 cleanup also removed the images, so rebuild them using the steps above.
 
 ```bash
 gcloud run services delete cs651-n31 \
@@ -98,4 +103,4 @@ gcloud run services delete cs651-n32 \
   --project=cs651-n33-lcho-20261014 --region=us-west1
 ```
 
-Do not delete `n33-investigation` as part of N3.1/N3.2 cleanup. Retained images and other cloud resources are separate from Cloud Run instance billing.
+Retained images and other cloud resources are separate from Cloud Run instance billing; the October 20 cleanup removed the stored lab images and temporary build bucket as well.
