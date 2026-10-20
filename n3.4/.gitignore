@@ -1,5 +1,6 @@
 backend/node_modules/
 backend/.env
 backend/.env.*
+!backend/.env.example
 *.zip
 .DS_Store

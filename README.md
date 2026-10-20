@@ -1,79 +1,88 @@
-# NodeJS + Express (w/EJS) Code to exercise reading in form data and returning a response
+# CS651 Lab N3: Forms, REST APIs, and Cloud Deployment
 
-This code has a / path (mapped to index.js --> index.ejs) which displays 3 forms each mapped to a different 
-uri path in index.js that executes different controller code (for simplicity --as this is simple code, left controller
-code in index.js rather than in the controllers directory --which is a better MVC code styling format).   Here is the interface
+Express/EJS form handling, a browser `fetch()` JSON API, and a Gemini backend deployed to AWS Elastic Beanstalk.
 
-![image](https://github.com/grewe/FormData/assets/11790686/58f45881-96d6-4275-82a1-f8b291d1475c)
+## Live deployments
 
+Last verified: **October 20, 2026**. These are the current demo URLs; cloud availability depends on the active services and AWS Learner Lab session.
 
-After hitting the Go button on the first form this is what the results will look like (notice it has read in the form data)
-![image](https://github.com/grewe/FormData/assets/11790686/06ab7aed-cdaf-4e18-867b-2bf82061a372)
+| Lab | Live demo | Deployed application source |
+| --- | --- | --- |
+| **N3.1** - Traditional HTML forms | [Open Cloud Run app](https://cs651-n31-a6jstwmpja-uw.a.run.app/) | [Original starter at `2e88635`](https://github.com/sean10203040/cs651-n3-labs/tree/2e88635) |
+| **N3.2** - REST/JSON and `fetch()` | [Open Cloud Run app](https://cs651-n32-a6jstwmpja-uw.a.run.app/) | Root application at [`14686f9`](https://github.com/sean10203040/cs651-n3-labs/tree/14686f9) |
+| **N3.4** - Smart Speech Coach backend | [Open Beanstalk backend](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/) / [Health](http://cs651-n34-lcho-20261020.us-east-1.elasticbeanstalk.com/api/health) | [`n3.4/backend/`](n3.4/backend/) at `14686f9` |
 
-## N3.2: HTML forms compared with REST / JSON
+**N3.3 is already graded and was left unchanged.** Its separate frontend/Cloud Run deployment is outside this deployment update; this repository contains the backend copy used for N3.4.
 
-Assignment: [From HTML Forms to REST/JSON APIs](https://borg.csueastbay.edu/~grewe/CS651/Projects/LabFormToREST_API.pdf).
-This extends the N3.1 starter; all three original forms remain available.
+The latest repository changes document and package these deployments. They do not change the application code running at the source commits above.
 
-### Run and test
+## Where to show the code
 
-From the repository directory, run `npm ci`, then `npm start`. Open
-[http://localhost:3000](http://localhost:3000). `PORT` can override the default.
-Run `npm test` with Node.js 18 or newer for the built-in HTTP integration tests.
-No new dependencies are required. This demo does not save customer data or send email.
+| What to explain | Source |
+| --- | --- |
+| Express setup, parsers, static files, and error handling | [`app.js`](app.js) |
+| Traditional GET/POST form routes and JSON customer API | [`routes/index.js`](routes/index.js) |
+| Traditional and REST forms on the same page | [`views/index.ejs`](views/index.ejs) |
+| Browser `fetch()`, inline results, timeout, and error handling | [`public/javascripts/customer.js`](public/javascripts/customer.js) |
+| Root server startup and cloud `PORT` support | [`bin/www`](bin/www) |
+| HTTP integration tests | [`test/customer-api.test.js`](test/customer-api.test.js) |
+| Cloud Run container build | [`Dockerfile`](Dockerfile), [deployment guide](docs/cloud-run.md) |
+| Speech Coach Express/Gemini backend | [`n3.4/backend/server.js`](n3.4/backend/server.js) |
+| Beanstalk process command and setup | [`n3.4/backend/Procfile`](n3.4/backend/Procfile), [deployment guide](n3.4/README.md) |
 
-### Demo checklist
+N3.2 extends N3.1; all original form routes remain in the root application. For the exact N3.1 demo code, use the original starter link above.
 
-1. In the traditional customer form, enter a name and email and select Go. The
-   browser navigates to `/readCustomerInfoAndRespond` and displays server-generated HTML.
-2. Return to `/`. In the REST form, enter a name and email and select Submit with
-   fetch (or press Enter). The greeting appears below the form; the URL and document
-   stay on `/`. Input values and the other forms remain on screen.
-3. In browser developer tools, select Network and compare the requests. Traditional
-   submission sends `application/x-www-form-urlencoded` and receives `text/html` as
-   a document navigation. The REST form sends `application/json` to `/api/customer`
-   and receives JSON as a fetch request, without a new document request.
-4. Submit the REST form with an empty field or invalid email: browser validation
-   prevents submission. A direct JSON request with missing, blank, or non-string
-   fields receives HTTP 400 and a JSON `error`. Non-JSON content receives 415.
-5. Try an HTML-like name such as `<b>Linn</b>`: the REST result displays it literally.
-6. With the page already loaded, switch developer tools Network to Offline and
-   submit. An error appears and the submit button becomes available again. Restore
-   networking and retry successfully. A stalled request times out after ten seconds.
+## Run locally
 
-### What to explain in class
+Use **Node.js 22** to match the deployed runtimes.
 
-Traditional: Browser → HTML form → Express → HTML response → browser navigation.
-
-REST: Browser JavaScript → fetch with JSON → Express API → JSON response → JavaScript
-updates part of the existing page.
-
-The backend still reads the same name/email and produces a greeting. The main
-change is the communication and rendering model, rather than the business logic.
-Both models are widely used; the traditional forms also work without JavaScript.
-
-### API example
-
-`POST /api/customer` with `Content-Type: application/json`:
-
-```json
-{"name":"Linn","email":"linn@example.com"}
+```bash
+npm ci
+npm start
 ```
 
-HTTP 200 response:
+Open [http://localhost:3000](http://localhost:3000). Set `PORT` to change the port, and press **Ctrl+C** to stop the server. This teaching app does not save customer data or send email.
+
+Run the existing HTTP integration tests:
+
+```bash
+npm test
+```
+
+For the separate AI backend, follow [N3.4 local setup](n3.4/README.md#run-the-backend-locally). A Gemini API key is required only for that backend.
+
+## Class demonstration
+
+1. **N3.1:** Open the original Cloud Run app, enter a name/email, and submit the customer form. The browser navigates to `/readCustomerInfoAndRespond` and receives HTML.
+2. **N3.2:** Open the REST app and submit the **Customer Form using REST / JSON**. JavaScript posts JSON to `/api/customer`; the greeting appears on the same page without navigation. The traditional forms still work.
+3. Compare the requests in browser developer tools: `application/x-www-form-urlencoded` + HTML navigation versus `application/json` + a JSON fetch response.
+4. **N3.4:** Show the backend source and `Procfile`, the Beanstalk environment with health **Ok**, then run the [health and AI requests](n3.4/README.md#verify-the-deployment). Keep the API key hidden.
+
+| Traditional forms | REST/fetch |
+| --- | --- |
+| Browser submits an HTML form | Browser JavaScript sends JSON |
+| Express returns an HTML response | Express returns JSON |
+| Browser loads the response document | JavaScript updates the existing document |
+
+### N3.2 API example
+
+```bash
+curl -sS https://cs651-n32-a6jstwmpja-uw.a.run.app/api/customer \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Linn","email":"linn@example.com"}'
+```
 
 ```json
 {"message":"Welcome Linn","email":"linn@example.com"}
 ```
 
-Malformed JSON returns 400; the existing Express JSON body-size limit returns 413.
-The REST client reports request errors inline and allows a retry. The design and
-security rationale are recorded in [the decision note](docs/decisions/n3-2-customer-api.md).
+Missing, blank, or non-string fields return HTTP 400; non-JSON requests return 415; malformed JSON returns 400; oversized JSON returns 413. The browser form also validates the email and displays request failures inline. See the [design decision](docs/decisions/n3-2-customer-api.md) for the rendering and validation rationale.
 
-### Team handoff
+## Deployment guides and verification
 
-Keep N3.1 deployment changes separate from N3.2 application changes. Review the
-traditional form and REST form together after integration. Each member should
-author their own commits with an email linked to their GitHub account; code must
-reach `main` before it is reflected in the repository contributor graph. Initial
-starter/dependency imports are not a measure of original student-written code.
+- [N3.1/N3.2: Cloud Run build, deployment, and shutdown](docs/cloud-run.md)
+- [N3.4: Elastic Beanstalk setup, configuration, and cleanup](n3.4/README.md)
+- [Deployment verification record](docs/deployment-verification.md)
+- [N3.2 assignment](https://borg.csueastbay.edu/~grewe/CS651/Projects/LabFormToREST_API.pdf) and [course lab outline](https://borg.csueastbay.edu/~grewe/CS651/outline.htm)
+
+The forms start from the instructor's [FormData example](https://github.com/grewe/FormData). Do not commit API keys, `.env` files, credentials, dependency installs, or ZIP deployment bundles.
